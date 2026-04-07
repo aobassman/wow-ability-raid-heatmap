@@ -1,0 +1,21 @@
+# Environment / secrets
+.env
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# API cache
+.cache/
+
+# Dev/scratch files
+debug_events.py
+test_chart.py
+test_chart.html
+minimal_test.html
+timeline.html
+timeline.talents.txt
+tools/discover_results.json
