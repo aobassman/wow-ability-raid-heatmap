@@ -6,24 +6,122 @@
 <title>WCL Cooldown Analyzer</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#16213e;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:2.5rem 3rem;max-width:860px}
-h1{font-size:1.5rem;color:#90caf9;margin-bottom:.2rem}
-.updated{color:rgba(255,255,255,.35);font-size:.8rem;margin-bottom:2.5rem}
-.spec-group{margin-bottom:2rem}
-h2{font-size:1rem;color:#ce93d8;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:.4rem;margin-bottom:.7rem;text-transform:uppercase;letter-spacing:.05em}
-ul{list-style:none}
-li{display:flex;align-items:baseline;justify-content:space-between;padding:.38rem 0;border-bottom:1px solid rgba(255,255,255,.04)}
-a{color:#80cbc4;text-decoration:none;font-size:.92rem}
-a:hover{color:#e0f2f1;text-decoration:underline}
-.meta{color:rgba(255,255,255,.3);font-size:.78rem;margin-left:1rem;white-space:nowrap}
-.empty{color:rgba(255,255,255,.4);font-style:italic;margin-top:1rem}
+body{background:#16213e;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+     display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:2rem}
+h1{font-size:1.6rem;color:#90caf9;margin-bottom:.25rem;letter-spacing:.02em}
+.subtitle{color:rgba(255,255,255,.3);font-size:.78rem;margin-bottom:2.5rem}
+.pickers{display:flex;flex-direction:column;gap:.9rem;width:100%;max-width:400px}
+.row{display:flex;flex-direction:column;gap:.3rem}
+label{color:rgba(255,255,255,.45);font-size:.72rem;text-transform:uppercase;letter-spacing:.07em}
+select{
+  width:100%;padding:.6rem .85rem;border-radius:6px;
+  background:#1a2744;color:#e0e0e0;
+  border:1px solid rgba(144,202,249,0.25);
+  font-size:.92rem;appearance:none;cursor:pointer;
+  outline:none;transition:border-color .15s;
+}
+select:focus{border-color:#90caf9}
+select:disabled{opacity:.35;cursor:default}
+.go-row{margin-top:.4rem}
+button{
+  width:100%;padding:.65rem;border-radius:6px;
+  background:#1565c0;color:#fff;border:none;
+  font-size:.95rem;font-weight:600;cursor:pointer;
+  letter-spacing:.03em;transition:background .15s;
+}
+button:hover:not(:disabled){background:#1976d2}
+button:disabled{opacity:.3;cursor:default}
+.meta-line{color:rgba(255,255,255,.25);font-size:.75rem;margin-top:.3rem;min-height:1em;text-align:right}
 </style>
 </head>
 <body>
 <h1>WCL Cooldown Analyzer</h1>
-<p class="updated">Last updated: 2026-04-06</p>
-<section class="spec-group"><h2>Retribution Paladin</h2><ul><li><a href="retribution-paladin-imperator-averzian-mythic.html">Imperator Averzian (Mythic)</a><span class="meta">100 parses · 2026-04-06</span></li></ul></section>
-<section class="spec-group"><h2>Windwalker Monk</h2><ul><li><a href="windwalker-monk-imperator-averzian-mythic.html">Imperator Averzian (Mythic)</a><span class="meta">100 parses · 2026-04-06</span></li></ul></section>
-<section class="spec-group"><h2>Unholy Death Knight</h2><ul><li><a href="unholy-death-knight-imperator-averzian-mythic.html">Imperator Averzian (Mythic)</a><span class="meta">10 parses · 2026-04-06</span></li></ul></section>
+<p class="subtitle">Last updated: 2026-04-07</p>
+<div class="pickers">
+  <div class="row">
+    <label for="sel-class">Class</label>
+    <select id="sel-class"><option value="">— Select class —</option></select>
+  </div>
+  <div class="row">
+    <label for="sel-spec">Spec</label>
+    <select id="sel-spec" disabled><option value="">— Select spec —</option></select>
+  </div>
+  <div class="row">
+    <label for="sel-boss">Boss</label>
+    <select id="sel-boss" disabled><option value="">— Select boss —</option></select>
+  </div>
+  <div class="go-row">
+    <button id="go-btn" disabled>View chart →</button>
+    <div class="meta-line" id="meta-line"></div>
+  </div>
+</div>
+<script>
+var DATA = {"Death Knight": {"Blood": [{"enc": "Imperator Averzian (Mythic)", "file": "blood-death-knight-imperator-averzian-mythic.html", "parses": 50, "date": "2026-04-07"}, {"enc": "Vorasius (Mythic)", "file": "blood-death-knight-vorasius-mythic.html", "parses": 50, "date": "2026-04-07"}], "Frost": [{"enc": "Imperator Averzian (Mythic)", "file": "frost-death-knight-imperator-averzian-mythic.html", "parses": 50, "date": "2026-04-07"}], "Unholy": [{"enc": "Imperator Averzian (Mythic)", "file": "unholy-death-knight-imperator-averzian-mythic.html", "parses": 10, "date": "2026-04-06"}]}, "Demon Hunter": {"Havoc": [{"enc": "Imperator Averzian (Mythic)", "file": "havoc-demon-hunter-imperator-averzian-mythic.html", "parses": 50, "date": "2026-04-07"}], "Vengeance": [{"enc": "Imperator Averzian (Mythic)", "file": "vengeance-demon-hunter-imperator-averzian-mythic.html", "parses": 50, "date": "2026-04-07"}]}, "Druid": {"Balance": [{"enc": "Imperator Averzian (Mythic)", "file": "balance-druid-imperator-averzian-mythic.html", "parses": 50, "date": "2026-04-07"}], "Feral": [{"enc": "Imperator Averzian (Mythic)", "file": "feral-druid-imperator-averzian-mythic.html", "parses": 50, "date": "2026-04-07"}], "Guardian": [{"enc": "Imperator Averzian (Mythic)", "file": "guardian-druid-imperator-averzian-mythic.html", "parses": 50, "date": "2026-04-07"}], "Restoration": [{"enc": "Imperator Averzian (Mythic)", "file": "restoration-druid-imperator-averzian-mythic.html", "parses": 50, "date": "2026-04-07"}]}, "Evoker": {"Augmentation": [{"enc": "Imperator Averzian (Mythic)", "file": "augmentation-evoker-imperator-averzian-mythic.html", "parses": 50, "date": "2026-04-07"}], "Devastation": [{"enc": "Imperator Averzian (Mythic)", "file": "devastation-evoker-imperator-averzian-mythic.html", "parses": 50, "date": "2026-04-07"}], "Preservation": [{"enc": "Imperator Averzian (Mythic)", "file": "preservation-evoker-imperator-averzian-mythic.html", "parses": 20, "date": "2026-04-07"}]}, "Mage": {"Arcane": [{"enc": "Imperator Averzian (Mythic)", "file": "arcane-mage-imperator-averzian-mythic.html", "parses": 50, "date": "2026-04-07"}], "Fire": [{"enc": "Imperator Averzian (Mythic)", "file": "fire-mage-imperator-averzian-mythic.html", "parses": 50, "date": "2026-04-07"}], "Frost": [{"enc": "Imperator Averzian (Mythic)", "file": "frost-mage-imperator-averzian-mythic.html", "parses": 50, "date": "2026-04-07"}]}, "Monk": {"Brewmaster": [{"enc": "Imperator Averzian (Mythic)", "file": "brewmaster-monk-imperator-averzian-mythic.html", "parses": 50, "date": "2026-04-07"}], "Mistweaver": [{"enc": "Imperator Averzian (Mythic)", "file": "mistweaver-monk-imperator-averzian-mythic.html", "parses": 50, "date": "2026-04-07"}], "Windwalker": [{"enc": "Imperator Averzian (Mythic)", "file": "windwalker-monk-imperator-averzian-mythic.html", "parses": 100, "date": "2026-04-06"}]}, "Paladin": {"Holy": [{"enc": "Imperator Averzian (Mythic)", "file": "holy-paladin-imperator-averzian-mythic.html", "parses": 50, "date": "2026-04-07"}], "Protection": [{"enc": "Imperator Averzian (Mythic)", "file": "protection-paladin-imperator-averzian-mythic.html", "parses": 50, "date": "2026-04-07"}], "Retribution": [{"enc": "Imperator Averzian (Mythic)", "file": "retribution-paladin-imperator-averzian-mythic.html", "parses": 100, "date": "2026-04-06"}]}, "Priest": {"Discipline": [{"enc": "Imperator Averzian (Mythic)", "file": "discipline-priest-imperator-averzian-mythic.html", "parses": 50, "date": "2026-04-07"}], "Holy": [{"enc": "Imperator Averzian (Mythic)", "file": "holy-priest-imperator-averzian-mythic.html", "parses": 50, "date": "2026-04-07"}], "Shadow": [{"enc": "Imperator Averzian (Mythic)", "file": "shadow-priest-imperator-averzian-mythic.html", "parses": 50, "date": "2026-04-07"}]}, "Rogue": {"Assassination": [{"enc": "Imperator Averzian (Mythic)", "file": "assassination-rogue-imperator-averzian-mythic.html", "parses": 50, "date": "2026-04-07"}], "Outlaw": [{"enc": "Imperator Averzian (Mythic)", "file": "outlaw-rogue-imperator-averzian-mythic.html", "parses": 44, "date": "2026-04-07"}], "Subtlety": [{"enc": "Imperator Averzian (Mythic)", "file": "subtlety-rogue-imperator-averzian-mythic.html", "parses": 50, "date": "2026-04-07"}]}, "Shaman": {"Elemental": [{"enc": "Imperator Averzian (Mythic)", "file": "elemental-shaman-imperator-averzian-mythic.html", "parses": 50, "date": "2026-04-07"}], "Enhancement": [{"enc": "Imperator Averzian (Mythic)", "file": "enhancement-shaman-imperator-averzian-mythic.html", "parses": 50, "date": "2026-04-07"}], "Restoration": [{"enc": "Imperator Averzian (Mythic)", "file": "restoration-shaman-imperator-averzian-mythic.html", "parses": 50, "date": "2026-04-07"}]}, "Warlock": {"Affliction": [{"enc": "Imperator Averzian (Mythic)", "file": "affliction-warlock-imperator-averzian-mythic.html", "parses": 50, "date": "2026-04-07"}], "Demonology": [{"enc": "Imperator Averzian (Mythic)", "file": "demonology-warlock-imperator-averzian-mythic.html", "parses": 50, "date": "2026-04-07"}], "Destruction": [{"enc": "Imperator Averzian (Mythic)", "file": "destruction-warlock-imperator-averzian-mythic.html", "parses": 50, "date": "2026-04-07"}]}, "Warrior": {"Arms": [{"enc": "Imperator Averzian (Mythic)", "file": "arms-warrior-imperator-averzian-mythic.html", "parses": 50, "date": "2026-04-07"}], "Fury": [{"enc": "Imperator Averzian (Mythic)", "file": "fury-warrior-imperator-averzian-mythic.html", "parses": 50, "date": "2026-04-07"}], "Protection": [{"enc": "Imperator Averzian (Mythic)", "file": "protection-warrior-imperator-averzian-mythic.html", "parses": 50, "date": "2026-04-07"}]}};
+
+var selClass = document.getElementById('sel-class');
+var selSpec  = document.getElementById('sel-spec');
+var selBoss  = document.getElementById('sel-boss');
+var goBtn    = document.getElementById('go-btn');
+var metaLine = document.getElementById('meta-line');
+
+// Populate class dropdown
+Object.keys(DATA).sort().forEach(function(cls) {
+  var o = document.createElement('option');
+  o.value = cls; o.textContent = cls;
+  selClass.appendChild(o);
+});
+
+function reset(sel, placeholder) {
+  sel.innerHTML = '<option value="">' + placeholder + '</option>';
+  sel.disabled = true;
+}
+
+selClass.addEventListener('change', function() {
+  reset(selSpec, '— Select spec —');
+  reset(selBoss, '— Select boss —');
+  goBtn.disabled = true;
+  metaLine.textContent = '';
+  var cls = this.value;
+  if (!cls) return;
+  var specs = DATA[cls];
+  Object.keys(specs).sort().forEach(function(sp) {
+    var o = document.createElement('option');
+    o.value = sp; o.textContent = sp;
+    selSpec.appendChild(o);
+  });
+  selSpec.disabled = false;
+  if (selSpec.options.length === 2) { selSpec.selectedIndex = 1; selSpec.dispatchEvent(new Event('change')); }
+});
+
+selSpec.addEventListener('change', function() {
+  reset(selBoss, '— Select boss —');
+  goBtn.disabled = true;
+  metaLine.textContent = '';
+  var cls = selClass.value, sp = this.value;
+  if (!cls || !sp) return;
+  var entries = DATA[cls][sp];
+  entries.forEach(function(e) {
+    var o = document.createElement('option');
+    o.value = e.file;
+    o.textContent = e.enc;
+    o.dataset.parses = e.parses;
+    o.dataset.date   = e.date;
+    selBoss.appendChild(o);
+  });
+  selBoss.disabled = false;
+  if (selBoss.options.length === 2) { selBoss.selectedIndex = 1; selBoss.dispatchEvent(new Event('change')); }
+});
+
+selBoss.addEventListener('change', function() {
+  var opt = this.options[this.selectedIndex];
+  if (!this.value) { goBtn.disabled = true; metaLine.textContent = ''; return; }
+  goBtn.disabled = false;
+  metaLine.textContent = opt.dataset.parses + ' parses · ' + opt.dataset.date;
+});
+
+goBtn.addEventListener('click', function() {
+  if (selBoss.value) window.location.href = selBoss.value;
+});
+</script>
 </body>
 </html>

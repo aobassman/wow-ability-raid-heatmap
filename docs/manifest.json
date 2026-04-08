@@ -1,10 +1,31 @@
 [
   {
+    "spec": "Blood Death Knight",
+    "encounter": "Imperator Averzian (Mythic)",
+    "parse_count": 50,
+    "date": "2026-04-07",
+    "file": "blood-death-knight-imperator-averzian-mythic.html"
+  },
+  {
+    "spec": "Frost Death Knight",
+    "encounter": "Imperator Averzian (Mythic)",
+    "parse_count": 50,
+    "date": "2026-04-07",
+    "file": "frost-death-knight-imperator-averzian-mythic.html"
+  },
+  {
     "spec": "Retribution Paladin",
     "encounter": "Imperator Averzian (Mythic)",
     "parse_count": 100,
     "date": "2026-04-06",
     "file": "retribution-paladin-imperator-averzian-mythic.html"
+  },
+  {
+    "spec": "Unholy Death Knight",
+    "encounter": "Imperator Averzian (Mythic)",
+    "parse_count": 10,
+    "date": "2026-04-06",
+    "file": "unholy-death-knight-imperator-averzian-mythic.html"
   },
   {
     "spec": "Windwalker Monk",
@@ -14,10 +35,259 @@
     "file": "windwalker-monk-imperator-averzian-mythic.html"
   },
   {
-    "spec": "Unholy Death Knight",
+    "spec": "Blood Death Knight",
+    "class": "Death Knight",
+    "encounter": "Vorasius (Mythic)",
+    "parse_count": 50,
+    "date": "2026-04-07",
+    "file": "blood-death-knight-vorasius-mythic.html"
+  },
+  {
+    "spec": "Havoc Demon Hunter",
+    "class": "Demon Hunter",
     "encounter": "Imperator Averzian (Mythic)",
-    "parse_count": 10,
-    "date": "2026-04-06",
-    "file": "unholy-death-knight-imperator-averzian-mythic.html"
+    "parse_count": 50,
+    "date": "2026-04-07",
+    "file": "havoc-demon-hunter-imperator-averzian-mythic.html"
+  },
+  {
+    "spec": "Vengeance Demon Hunter",
+    "class": "Demon Hunter",
+    "encounter": "Imperator Averzian (Mythic)",
+    "parse_count": 50,
+    "date": "2026-04-07",
+    "file": "vengeance-demon-hunter-imperator-averzian-mythic.html"
+  },
+  {
+    "spec": "Balance Druid",
+    "class": "Druid",
+    "encounter": "Imperator Averzian (Mythic)",
+    "parse_count": 50,
+    "date": "2026-04-07",
+    "file": "balance-druid-imperator-averzian-mythic.html"
+  },
+  {
+    "spec": "Feral Druid",
+    "class": "Druid",
+    "encounter": "Imperator Averzian (Mythic)",
+    "parse_count": 50,
+    "date": "2026-04-07",
+    "file": "feral-druid-imperator-averzian-mythic.html"
+  },
+  {
+    "spec": "Guardian Druid",
+    "class": "Druid",
+    "encounter": "Imperator Averzian (Mythic)",
+    "parse_count": 50,
+    "date": "2026-04-07",
+    "file": "guardian-druid-imperator-averzian-mythic.html"
+  },
+  {
+    "spec": "Restoration Druid",
+    "class": "Druid",
+    "encounter": "Imperator Averzian (Mythic)",
+    "parse_count": 50,
+    "date": "2026-04-07",
+    "file": "restoration-druid-imperator-averzian-mythic.html"
+  },
+  {
+    "spec": "Augmentation Evoker",
+    "class": "Evoker",
+    "encounter": "Imperator Averzian (Mythic)",
+    "parse_count": 50,
+    "date": "2026-04-07",
+    "file": "augmentation-evoker-imperator-averzian-mythic.html"
+  },
+  {
+    "spec": "Devastation Evoker",
+    "class": "Evoker",
+    "encounter": "Imperator Averzian (Mythic)",
+    "parse_count": 50,
+    "date": "2026-04-07",
+    "file": "devastation-evoker-imperator-averzian-mythic.html"
+  },
+  {
+    "spec": "Preservation Evoker",
+    "class": "Evoker",
+    "encounter": "Imperator Averzian (Mythic)",
+    "parse_count": 20,
+    "date": "2026-04-07",
+    "file": "preservation-evoker-imperator-averzian-mythic.html"
+  },
+  {
+    "spec": "Arcane Mage",
+    "class": "Mage",
+    "encounter": "Imperator Averzian (Mythic)",
+    "parse_count": 50,
+    "date": "2026-04-07",
+    "file": "arcane-mage-imperator-averzian-mythic.html"
+  },
+  {
+    "spec": "Fire Mage",
+    "class": "Mage",
+    "encounter": "Imperator Averzian (Mythic)",
+    "parse_count": 50,
+    "date": "2026-04-07",
+    "file": "fire-mage-imperator-averzian-mythic.html"
+  },
+  {
+    "spec": "Frost Mage",
+    "class": "Mage",
+    "encounter": "Imperator Averzian (Mythic)",
+    "parse_count": 50,
+    "date": "2026-04-07",
+    "file": "frost-mage-imperator-averzian-mythic.html"
+  },
+  {
+    "spec": "Brewmaster Monk",
+    "class": "Monk",
+    "encounter": "Imperator Averzian (Mythic)",
+    "parse_count": 50,
+    "date": "2026-04-07",
+    "file": "brewmaster-monk-imperator-averzian-mythic.html"
+  },
+  {
+    "spec": "Mistweaver Monk",
+    "class": "Monk",
+    "encounter": "Imperator Averzian (Mythic)",
+    "parse_count": 50,
+    "date": "2026-04-07",
+    "file": "mistweaver-monk-imperator-averzian-mythic.html"
+  },
+  {
+    "spec": "Holy Paladin",
+    "class": "Paladin",
+    "encounter": "Imperator Averzian (Mythic)",
+    "parse_count": 50,
+    "date": "2026-04-07",
+    "file": "holy-paladin-imperator-averzian-mythic.html"
+  },
+  {
+    "spec": "Protection Paladin",
+    "class": "Paladin",
+    "encounter": "Imperator Averzian (Mythic)",
+    "parse_count": 50,
+    "date": "2026-04-07",
+    "file": "protection-paladin-imperator-averzian-mythic.html"
+  },
+  {
+    "spec": "Discipline Priest",
+    "class": "Priest",
+    "encounter": "Imperator Averzian (Mythic)",
+    "parse_count": 50,
+    "date": "2026-04-07",
+    "file": "discipline-priest-imperator-averzian-mythic.html"
+  },
+  {
+    "spec": "Holy Priest",
+    "class": "Priest",
+    "encounter": "Imperator Averzian (Mythic)",
+    "parse_count": 50,
+    "date": "2026-04-07",
+    "file": "holy-priest-imperator-averzian-mythic.html"
+  },
+  {
+    "spec": "Shadow Priest",
+    "class": "Priest",
+    "encounter": "Imperator Averzian (Mythic)",
+    "parse_count": 50,
+    "date": "2026-04-07",
+    "file": "shadow-priest-imperator-averzian-mythic.html"
+  },
+  {
+    "spec": "Assassination Rogue",
+    "class": "Rogue",
+    "encounter": "Imperator Averzian (Mythic)",
+    "parse_count": 50,
+    "date": "2026-04-07",
+    "file": "assassination-rogue-imperator-averzian-mythic.html"
+  },
+  {
+    "spec": "Outlaw Rogue",
+    "class": "Rogue",
+    "encounter": "Imperator Averzian (Mythic)",
+    "parse_count": 44,
+    "date": "2026-04-07",
+    "file": "outlaw-rogue-imperator-averzian-mythic.html"
+  },
+  {
+    "spec": "Subtlety Rogue",
+    "class": "Rogue",
+    "encounter": "Imperator Averzian (Mythic)",
+    "parse_count": 50,
+    "date": "2026-04-07",
+    "file": "subtlety-rogue-imperator-averzian-mythic.html"
+  },
+  {
+    "spec": "Elemental Shaman",
+    "class": "Shaman",
+    "encounter": "Imperator Averzian (Mythic)",
+    "parse_count": 50,
+    "date": "2026-04-07",
+    "file": "elemental-shaman-imperator-averzian-mythic.html"
+  },
+  {
+    "spec": "Enhancement Shaman",
+    "class": "Shaman",
+    "encounter": "Imperator Averzian (Mythic)",
+    "parse_count": 50,
+    "date": "2026-04-07",
+    "file": "enhancement-shaman-imperator-averzian-mythic.html"
+  },
+  {
+    "spec": "Restoration Shaman",
+    "class": "Shaman",
+    "encounter": "Imperator Averzian (Mythic)",
+    "parse_count": 50,
+    "date": "2026-04-07",
+    "file": "restoration-shaman-imperator-averzian-mythic.html"
+  },
+  {
+    "spec": "Affliction Warlock",
+    "class": "Warlock",
+    "encounter": "Imperator Averzian (Mythic)",
+    "parse_count": 50,
+    "date": "2026-04-07",
+    "file": "affliction-warlock-imperator-averzian-mythic.html"
+  },
+  {
+    "spec": "Demonology Warlock",
+    "class": "Warlock",
+    "encounter": "Imperator Averzian (Mythic)",
+    "parse_count": 50,
+    "date": "2026-04-07",
+    "file": "demonology-warlock-imperator-averzian-mythic.html"
+  },
+  {
+    "spec": "Destruction Warlock",
+    "class": "Warlock",
+    "encounter": "Imperator Averzian (Mythic)",
+    "parse_count": 50,
+    "date": "2026-04-07",
+    "file": "destruction-warlock-imperator-averzian-mythic.html"
+  },
+  {
+    "spec": "Arms Warrior",
+    "class": "Warrior",
+    "encounter": "Imperator Averzian (Mythic)",
+    "parse_count": 50,
+    "date": "2026-04-07",
+    "file": "arms-warrior-imperator-averzian-mythic.html"
+  },
+  {
+    "spec": "Fury Warrior",
+    "class": "Warrior",
+    "encounter": "Imperator Averzian (Mythic)",
+    "parse_count": 50,
+    "date": "2026-04-07",
+    "file": "fury-warrior-imperator-averzian-mythic.html"
+  },
+  {
+    "spec": "Protection Warrior",
+    "class": "Warrior",
+    "encounter": "Imperator Averzian (Mythic)",
+    "parse_count": 50,
+    "date": "2026-04-07",
+    "file": "protection-warrior-imperator-averzian-mythic.html"
   }
 ]

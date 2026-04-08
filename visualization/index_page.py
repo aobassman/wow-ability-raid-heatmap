@@ -1,8 +1,28 @@
 """Manage the docs/ output directory: manifest.json and regenerated index.html."""
 import json
-from collections import defaultdict
 from datetime import date
 from pathlib import Path
+
+_KNOWN_CLASSES = [
+    "Death Knight", "Demon Hunter", "Druid", "Evoker",
+    "Hunter", "Mage", "Monk", "Paladin", "Priest",
+    "Rogue", "Shaman", "Warlock", "Warrior",
+]
+
+
+def _extract_class(entry: dict) -> tuple[str, str]:
+    """Return (spec_name, class_name) from a manifest entry."""
+    if "class" in entry:
+        cls = entry["class"]
+        spec = entry["spec"].replace(cls, "").strip() if entry["spec"].endswith(cls) else entry["spec"]
+        return spec, cls
+    # Fallback: parse from "Spec ClassName" display string
+    display = entry.get("spec", "")
+    for cls in _KNOWN_CLASSES:
+        if display.endswith(cls):
+            return display[: -len(cls)].strip(), cls
+    parts = display.rsplit(" ", 1)
+    return (parts[0], parts[1]) if len(parts) == 2 else (display, "Unknown")
 
 
 def update_docs(output_dir: Path, entry: dict) -> None:
@@ -17,45 +37,48 @@ def update_docs(output_dir: Path, entry: dict) -> None:
         except Exception:
             pass
 
-    # Replace existing entry for the same output file (re-run)
     manifest = [e for e in manifest if e.get("file") != entry["file"]]
     manifest.append(entry)
-    manifest.sort(key=lambda e: (e.get("spec", ""), e.get("encounter", "")))
+    manifest.sort(key=lambda e: (e.get("class", ""), e.get("spec", ""), e.get("encounter", "")))
 
     manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     _write_index(output_dir, manifest)
 
 
 def _write_index(output_dir: Path, manifest: list[dict]) -> None:
-    by_spec: dict[str, list[dict]] = defaultdict(list)
+    # Build nested: class_name -> spec_name -> [entries]
+    tree: dict[str, dict[str, list[dict]]] = {}
     for e in manifest:
-        by_spec[e.get("spec", "Unknown")].append(e)
+        spec_name, class_name = _extract_class(e)
+        tree.setdefault(class_name, {}).setdefault(spec_name, []).append(e)
 
-    sections: list[str] = []
-    for spec in sorted(by_spec):
-        entries = sorted(by_spec[spec], key=lambda x: x.get("encounter", ""))
-        rows = []
-        for e in entries:
-            enc     = e.get("encounter", "Unknown")
-            parses  = e.get("parse_count", "?")
-            gen     = e.get("date", "")
-            file    = e.get("file", "#")
-            rows.append(
-                f'<li><a href="{file}">{enc}</a>'
-                f'<span class="meta">{parses} parses · {gen}</span></li>'
-            )
-        sections.append(
-            f'<section class="spec-group">'
-            f'<h2>{spec}</h2>'
-            f'<ul>{"".join(rows)}</ul>'
-            f'</section>'
-        )
+    # Sort everything
+    sorted_tree = {
+        cls: {
+            sp: sorted(entries, key=lambda x: x.get("encounter", ""))
+            for sp, entries in sorted(specs.items())
+        }
+        for cls, specs in sorted(tree.items())
+    }
 
-    content = "\n".join(sections) or (
-        "<p class='empty'>No charts yet — run the analyzer to generate some.</p>"
-    )
+    # Flatten to JS-friendly structure
+    js_data: dict[str, dict[str, list[dict]]] = {}
+    for cls, specs in sorted_tree.items():
+        js_data[cls] = {}
+        for sp, entries in specs.items():
+            js_data[cls][sp] = [
+                {
+                    "enc":    e.get("encounter", "Unknown"),
+                    "file":   e.get("file", "#"),
+                    "parses": e.get("parse_count", "?"),
+                    "date":   e.get("date", ""),
+                }
+                for e in entries
+            ]
 
     today = date.today().strftime("%Y-%m-%d")
+    data_json = json.dumps(js_data, ensure_ascii=False)
+
     html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -64,23 +87,123 @@ def _write_index(output_dir: Path, manifest: list[dict]) -> None:
 <title>WCL Cooldown Analyzer</title>
 <style>
 *{{box-sizing:border-box;margin:0;padding:0}}
-body{{background:#16213e;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:2.5rem 3rem;max-width:860px}}
-h1{{font-size:1.5rem;color:#90caf9;margin-bottom:.2rem}}
-.updated{{color:rgba(255,255,255,.35);font-size:.8rem;margin-bottom:2.5rem}}
-.spec-group{{margin-bottom:2rem}}
-h2{{font-size:1rem;color:#ce93d8;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:.4rem;margin-bottom:.7rem;text-transform:uppercase;letter-spacing:.05em}}
-ul{{list-style:none}}
-li{{display:flex;align-items:baseline;justify-content:space-between;padding:.38rem 0;border-bottom:1px solid rgba(255,255,255,.04)}}
-a{{color:#80cbc4;text-decoration:none;font-size:.92rem}}
-a:hover{{color:#e0f2f1;text-decoration:underline}}
-.meta{{color:rgba(255,255,255,.3);font-size:.78rem;margin-left:1rem;white-space:nowrap}}
-.empty{{color:rgba(255,255,255,.4);font-style:italic;margin-top:1rem}}
+body{{background:#16213e;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+     display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:2rem}}
+h1{{font-size:1.6rem;color:#90caf9;margin-bottom:.25rem;letter-spacing:.02em}}
+.subtitle{{color:rgba(255,255,255,.3);font-size:.78rem;margin-bottom:2.5rem}}
+.pickers{{display:flex;flex-direction:column;gap:.9rem;width:100%;max-width:400px}}
+.row{{display:flex;flex-direction:column;gap:.3rem}}
+label{{color:rgba(255,255,255,.45);font-size:.72rem;text-transform:uppercase;letter-spacing:.07em}}
+select{{
+  width:100%;padding:.6rem .85rem;border-radius:6px;
+  background:#1a2744;color:#e0e0e0;
+  border:1px solid rgba(144,202,249,0.25);
+  font-size:.92rem;appearance:none;cursor:pointer;
+  outline:none;transition:border-color .15s;
+}}
+select:focus{{border-color:#90caf9}}
+select:disabled{{opacity:.35;cursor:default}}
+.go-row{{margin-top:.4rem}}
+button{{
+  width:100%;padding:.65rem;border-radius:6px;
+  background:#1565c0;color:#fff;border:none;
+  font-size:.95rem;font-weight:600;cursor:pointer;
+  letter-spacing:.03em;transition:background .15s;
+}}
+button:hover:not(:disabled){{background:#1976d2}}
+button:disabled{{opacity:.3;cursor:default}}
+.meta-line{{color:rgba(255,255,255,.25);font-size:.75rem;margin-top:.3rem;min-height:1em;text-align:right}}
 </style>
 </head>
 <body>
 <h1>WCL Cooldown Analyzer</h1>
-<p class="updated">Last updated: {today}</p>
-{content}
+<p class="subtitle">Last updated: {today}</p>
+<div class="pickers">
+  <div class="row">
+    <label for="sel-class">Class</label>
+    <select id="sel-class"><option value="">— Select class —</option></select>
+  </div>
+  <div class="row">
+    <label for="sel-spec">Spec</label>
+    <select id="sel-spec" disabled><option value="">— Select spec —</option></select>
+  </div>
+  <div class="row">
+    <label for="sel-boss">Boss</label>
+    <select id="sel-boss" disabled><option value="">— Select boss —</option></select>
+  </div>
+  <div class="go-row">
+    <button id="go-btn" disabled>View chart →</button>
+    <div class="meta-line" id="meta-line"></div>
+  </div>
+</div>
+<script>
+var DATA = {data_json};
+
+var selClass = document.getElementById('sel-class');
+var selSpec  = document.getElementById('sel-spec');
+var selBoss  = document.getElementById('sel-boss');
+var goBtn    = document.getElementById('go-btn');
+var metaLine = document.getElementById('meta-line');
+
+// Populate class dropdown
+Object.keys(DATA).sort().forEach(function(cls) {{
+  var o = document.createElement('option');
+  o.value = cls; o.textContent = cls;
+  selClass.appendChild(o);
+}});
+
+function reset(sel, placeholder) {{
+  sel.innerHTML = '<option value="">' + placeholder + '</option>';
+  sel.disabled = true;
+}}
+
+selClass.addEventListener('change', function() {{
+  reset(selSpec, '— Select spec —');
+  reset(selBoss, '— Select boss —');
+  goBtn.disabled = true;
+  metaLine.textContent = '';
+  var cls = this.value;
+  if (!cls) return;
+  var specs = DATA[cls];
+  Object.keys(specs).sort().forEach(function(sp) {{
+    var o = document.createElement('option');
+    o.value = sp; o.textContent = sp;
+    selSpec.appendChild(o);
+  }});
+  selSpec.disabled = false;
+  if (selSpec.options.length === 2) {{ selSpec.selectedIndex = 1; selSpec.dispatchEvent(new Event('change')); }}
+}});
+
+selSpec.addEventListener('change', function() {{
+  reset(selBoss, '— Select boss —');
+  goBtn.disabled = true;
+  metaLine.textContent = '';
+  var cls = selClass.value, sp = this.value;
+  if (!cls || !sp) return;
+  var entries = DATA[cls][sp];
+  entries.forEach(function(e) {{
+    var o = document.createElement('option');
+    o.value = e.file;
+    o.textContent = e.enc;
+    o.dataset.parses = e.parses;
+    o.dataset.date   = e.date;
+    selBoss.appendChild(o);
+  }});
+  selBoss.disabled = false;
+  if (selBoss.options.length === 2) {{ selBoss.selectedIndex = 1; selBoss.dispatchEvent(new Event('change')); }}
+}});
+
+selBoss.addEventListener('change', function() {{
+  var opt = this.options[this.selectedIndex];
+  if (!this.value) {{ goBtn.disabled = true; metaLine.textContent = ''; return; }}
+  goBtn.disabled = false;
+  metaLine.textContent = opt.dataset.parses + ' parses · ' + opt.dataset.date;
+}});
+
+goBtn.addEventListener('click', function() {{
+  if (selBoss.value) window.location.href = selBoss.value;
+}});
+</script>
 </body>
 </html>"""
 

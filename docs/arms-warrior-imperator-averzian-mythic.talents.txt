@@ -1,0 +1,3 @@
+=== TALENT NODE POPULARITY ===
+Node ID      Rank   Pick Rate    Votes
+---------------------------------------------

@@ -379,6 +379,7 @@ def main() -> None:
         from datetime import date as _date
         update_docs(output_dir, {
             "spec":        spec_label,
+            "class":       spec["class_name"],
             "encounter":   encounter_name,
             "parse_count": len(fights),
             "date":        _date.today().strftime("%Y-%m-%d"),

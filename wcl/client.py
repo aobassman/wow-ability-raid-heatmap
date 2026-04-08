@@ -74,6 +74,11 @@ class WCLClient:
                     headers={"Authorization": f"Bearer {token}"},
                     timeout=30,
                 )
+                if resp.status_code == 429 and attempt < 3:
+                    wait = 60 * (attempt + 1)
+                    console.log(f"[yellow]WCL API 429 rate limit — waiting {wait}s (attempt {attempt+1}/4)[/yellow]")
+                    time.sleep(wait)
+                    continue
                 if resp.status_code in (500, 502, 503, 504) and attempt < 3:
                     wait = 2 ** attempt
                     console.log(f"[yellow]WCL API {resp.status_code} — retrying in {wait}s (attempt {attempt+1}/4)[/yellow]")
