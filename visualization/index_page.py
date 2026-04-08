@@ -84,7 +84,7 @@ def _write_index(output_dir: Path, manifest: list[dict]) -> None:
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>WCL Cooldown Analyzer</title>
+<title>WCL Cooldown Heatmap</title>
 <style>
 *{{box-sizing:border-box;margin:0;padding:0}}
 body{{background:#16213e;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
@@ -116,7 +116,7 @@ button:disabled{{opacity:.3;cursor:default}}
 </style>
 </head>
 <body>
-<h1>WCL Cooldown Analyzer</h1>
+<h1>WCL Cooldown Heatmap</h1>
 <p class="subtitle">Last updated: {today}</p>
 <div class="pickers">
   <div class="row">
